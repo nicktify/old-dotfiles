@@ -6,28 +6,19 @@ let g:coc_disable_startup_warning = 1
 
 
 set list listchars=tab:❘-,trail:·,extends:»,precedes:«,nbsp:×
-colorscheme iceberg
+colorscheme tender
 let g:monokai_term_italic = 1
 set termguicolors
 set tabstop=4
-"set smartindent
+set smartindent
 set shiftwidth=4
 set expandtab
 set number relativenumber
-"set showcmd
 set wrap
 set textwidth=80
-"set wildmenu
 set showmatch
-"set incsearch
-"set hlsearch
-"set foldenable
-"set foldmethod=indent
 
-"Ale Lint
-"let b:ale_fixers = ['prettier', 'eslint']
-
-" NERDTree git plugin
+"NERDTree git plugin
 let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ 'Modified'  :'✹',
                 \ 'Staged'    :'✚',
@@ -48,7 +39,7 @@ map <C-c> :tabclose<CR>
 
 " ariline
 let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_theme='minimalist'
+let g:airline_theme='oceanicnext'
 
 " Emmet
 let g:user_emmet_leader_key=','
@@ -78,10 +69,10 @@ Plug 'mxw/vim-jsx'
 Plug 'crusoexia/vim-monokai'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'dense-analysis/ale'
 Plug 'ryanoasis/vim-devicons'
 Plug 'mattn/emmet-vim'
 Plug 'https://github.com/AndrewRadev/tagalong.vim'
+Plug 'larsbs/vimterial_dark'
 
 call plug#end()
 
@@ -98,7 +89,7 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'ap/vim-css-color'
+"Plugin 'ap/vim-css-color'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
@@ -122,6 +113,12 @@ Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'Yggdroot/indentLine'
+Plugin 'larsbs/vimterial_dark'
+Plugin 'othree/yajs.vim'
+Plugin 'othree/html5.vim'
+Plugin 'https://github.com/HerringtonDarkholme/yats.vim/'
+Plugin 'mhartington/oceanic-next'
+Plugin 'eslint/eslint'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -138,16 +135,17 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 
+
 " Auto Pairs
 
-let g:AutoPairsFlyMode = 0
+let g:AutoPairsFlyMode = 1
 let g:AutoPairsShortcutBackInsert = '<M-b>'
 
 
 " indentLine
 
 let g:indentLine_enabled = 0
-let g:indentLine_setColors = 0
+let g:indentLine_setColors = 1
 let g:indentLine_char = '┆'
 let g:indentLine_leadingSpaceEnabled = 1
 let g:indentLine_leadingSpaceChar = '·'
@@ -163,6 +161,18 @@ let g:webdevicons_enable_unite = 1
 let g:webdevicons_enable_airline_tabline = 1
 let g:webdevicons_enable_airline_statusline = 1
 
+
+
+" Oceanic Next
+" Theme
+ syntax enable
+" for vim 7
+ set t_Co=256
+
+" for vim 8
+ if (has("termguicolors"))
+  set termguicolors
+ endif
 
 let g:sol = {
 			\"gui": {
