@@ -1,22 +1,57 @@
 syntax on
 set nocompatible
 set encoding=UTF-8
-
-let g:coc_disable_startup_warning = 1
-
-
-set list listchars=tab:❘-,trail:·,extends:»,precedes:«,nbsp:×
-colorscheme tender
-let g:monokai_term_italic = 1
+set mouse=a
+filetype off
+syntax enable
+colorscheme molokai
 set termguicolors
 set tabstop=4
-set smartindent
 set shiftwidth=4
 set expandtab
 set number relativenumber
 set wrap
-set textwidth=80
-set showmatch
+
+" Mapping
+map <C-s> :w<CR>
+map <C-n> :NERDTreeToggle<CR>
+map <C-h> :tabprevious<CR>
+map <C-l> :tabnext<CR>
+map <C-c> :tabclose<CR>
+
+" Vim rooter
+let g:rooter_targets = '*'
+let g:rooter_patterns = ['=src', '.git']
+
+" Disable highlighting autopairs
+let g:loaded_matchparen=1
+
+" coc
+let g:coc_global_extensions = [
+  \ 'coc-snippets',
+  \ 'coc-pairs',
+  \ 'coc-tsserver',
+  \ 'coc-eslint', 
+  \ 'coc-prettier', 
+  \ 'coc-json', 
+  \ ]
+
+nmap <silent> gd <Plug>(coc-definition)
+
+" prettier
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+" tmux
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <C-/> :TmuxNavigatePrevious<cr>
+
+"NERDTree ignore
+let g:NERDTreeIgnore = ['^node_modules$']
 
 "NERDTree git plugin
 let g:NERDTreeGitStatusIndicatorMapCustom = {
@@ -32,18 +67,12 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ 'Unknown'   :'?',
                 \ }
 
-map <C-n> :NERDTreeToggle<CR>
-map <C-h> :tabprevious<CR>
-map <C-l> :tabnext<CR>
-map <C-c> :tabclose<CR>
-
 " ariline
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_theme='oceanicnext'
 
 " Emmet
 let g:user_emmet_leader_key=','
-
 let g:javascript_plugin_jsdoc = 1
 
 " Python, JavaScript, Go
@@ -54,10 +83,16 @@ let g:airline_powerline_fonts = 1
 let g:webdevicons_enable_airline_statusline = 1
 let g:webdevicons_enable_airline_tabline = 1
 
+" Vim Javascript
+let g:javascript_plugin_jsdoc = 1
+
+
+" React snippets
+"let g:UltiSnipsExpandTrigger="<C-l>"
 
 call plug#begin()
 
-
+Plug 'jacoborus/tender.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sheerun/vim-polyglot'
 Plug 'preservim/nerdcommenter'
@@ -73,45 +108,24 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'mattn/emmet-vim'
 Plug 'https://github.com/AndrewRadev/tagalong.vim'
 Plug 'larsbs/vimterial_dark'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'airblade/vim-rooter'
+Plug 'arcticicestudio/nord-vim'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'flrnprz/plastic.vim'
+"Plug 'epilande/vim-react-snippets'
+"Plug 'SirVer/ultisnips'
+Plug 'christoomey/vim-tmux-navigator'
 
 call plug#end()
 
-
-
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
 
-" let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-"Plugin 'ap/vim-css-color'
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
 Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" Git plugin not hosted on GitHub
-"Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-"Plugin 'file:///home/gmarik/path/to/plugin'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Install L9 and avoid a Naming conflict if you've already installed a
-" different version somewhere else.
-" Plugin 'ascenator/L9', {'name': 'newL9'}
-
-" All of your Plugins must be added before the following line
-
-" Plugins installed by myself
-
-Plugin 'jiangmiao/auto-pairs'
 Plugin 'Yggdroot/indentLine'
 Plugin 'larsbs/vimterial_dark'
 Plugin 'othree/yajs.vim'
@@ -119,27 +133,13 @@ Plugin 'othree/html5.vim'
 Plugin 'https://github.com/HerringtonDarkholme/yats.vim/'
 Plugin 'mhartington/oceanic-next'
 Plugin 'eslint/eslint'
+Plugin 'https://github.com/othree/javascript-libraries-syntax.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
 
-
-
-" Auto Pairs
-
-let g:AutoPairsFlyMode = 1
-let g:AutoPairsShortcutBackInsert = '<M-b>'
+" Javascrip libraries syntax
+let g:used_javascript_libs = 'react, jasmine, vue, handlebars, jquery'
 
 
 " indentLine
@@ -151,28 +151,12 @@ let g:indentLine_leadingSpaceEnabled = 1
 let g:indentLine_leadingSpaceChar = '·'
 let g:indentLine_fileTypeExclude = ['nerdtree']
 
-
-
-
 " Dev Icons
 let g:webdevicons_enable = 1
 let g:webdevicons_enable_nerdtree = 1
 let g:webdevicons_enable_unite = 1
 let g:webdevicons_enable_airline_tabline = 1
 let g:webdevicons_enable_airline_statusline = 1
-
-
-
-" Oceanic Next
-" Theme
- syntax enable
-" for vim 7
- set t_Co=256
-
-" for vim 8
- if (has("termguicolors"))
-  set termguicolors
- endif
 
 let g:sol = {
 			\"gui": {
@@ -254,3 +238,80 @@ function! DeviconsColors(config)
 			\'green': ['', '', '', '']
 		\}
 		call DeviconsColors(g:devicons_colors)
+
+
+
+
+
+" FZF
+
+" This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Enable per-command history.
+" CTRL-N and CTRL-P will be automatically bound to next-history and
+" previous-history instead of down and up. If you don't like the change,
+" explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+map <C-f> :Files<CR>
+map <leader>b :Buffers<CR>
+nnoremap <leader>g :Rg<CR>
+nnoremap <leader>t :Tags<CR>
+nnoremap <leader>m :Marks<CR>
+
+
+let g:fzf_tags_command = 'ctags -R'
+" Border color
+let g:fzf_layout = {'up':'~90%', 'window': { 'width': 0.8, 'height': 0.8,'yoffset':0.5,'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
+
+let $FZF_DEFAULT_OPTS = '--layout=reverse --info=inline'
+let $FZF_DEFAULT_COMMAND="rg --files --hidden"
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+
+"Get Files
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+
+
+" Get text in files with Rg
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+" Ripgrep advanced
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+" Git grep
+command! -bang -nargs=* GGrep
+  \ call fzf#vim#grep(
+  \   'git grep --line-number '.shellescape(<q-args>), 0,
+  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
