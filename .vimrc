@@ -4,27 +4,43 @@ set encoding=UTF-8
 set mouse=a
 filetype off
 syntax enable
-colorscheme molokai
+autocmd BufEnter * lcd %:p:h
+
+set background=dark " or light if you prefer the light version
+let g:two_firewatch_italics=1
+colorscheme two-firewatch
+highlight Comment cterm=italic
+
+let g:airline_theme='twofirewatch'
+
 set termguicolors
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
 set number relativenumber
-set wrap
+set nowrap
 
 " Mapping
 map <C-s> :w<CR>
 map <C-n> :NERDTreeToggle<CR>
-map <C-h> :tabprevious<CR>
-map <C-l> :tabnext<CR>
-map <C-c> :tabclose<CR>
+map <C-c> :q<CR>
+map <C-x> :q!<CR>
+map <C-\> :cd ~<CR>
+map <C-i> :tabnext<CR>
+map <C-u> :tabprevious<CR>
+
+
 
 " Vim rooter
 let g:rooter_targets = '*'
 let g:rooter_patterns = ['=src', '.git']
 
+
 " Disable highlighting autopairs
-let g:loaded_matchparen=1
+" let g:loaded_matchparen=1
+
+" autopair
+let g:AutoPairsFlyMode = 1
 
 " coc
 let g:coc_global_extensions = [
@@ -50,8 +66,35 @@ nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 nnoremap <silent> <C-/> :TmuxNavigatePrevious<cr>
 
+"NERDTree sizing
+let g:NERDTreeWinSize=40
+
 "NERDTree ignore
 let g:NERDTreeIgnore = ['^node_modules$']
+" Exit Vim if NERDTree is the only window left.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif
+
+" Start NERDTree when Vim starts with a directory argument.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
+    \ execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif
+
+" Start NERDTree, unless a file or session is specified, eg. vim -S session_file.vim.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists('s:std_in') && v:this_session == '' | NERDTree | endif
+
+" Start NERDTree. If a file is specified, move the cursor to its window.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
+
+" Start NERDTree when Vim is started without file arguments.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+
+" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
 
 "NERDTree git plugin
 let g:NERDTreeGitStatusIndicatorMapCustom = {
@@ -69,7 +112,7 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
 
 " ariline
 let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_theme='oceanicnext'
+let g:airline_theme='tender'
 
 " Emmet
 let g:user_emmet_leader_key=','
@@ -86,9 +129,12 @@ let g:webdevicons_enable_airline_tabline = 1
 " Vim Javascript
 let g:javascript_plugin_jsdoc = 1
 
-
 " React snippets
-"let g:UltiSnipsExpandTrigger="<C-l>"
+let g:UltiSnipsExpandTrigger="<C-l>"
+
+" Easymotion
+let mapleader=" "
+map <Leader>s <Plug>(easymotion-s2)
 
 call plug#begin()
 
@@ -114,9 +160,13 @@ Plug 'airblade/vim-rooter'
 Plug 'arcticicestudio/nord-vim'
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'flrnprz/plastic.vim'
-"Plug 'epilande/vim-react-snippets'
-"Plug 'SirVer/ultisnips'
+Plug 'epilande/vim-react-snippets'
+Plug 'SirVer/ultisnips'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'sonph/onehalf', { 'rtp': 'vim' }
+Plug 'easymotion/vim-easymotion'
+Plug 'jiangmiao/auto-pairs'
 
 call plug#end()
 
@@ -134,6 +184,7 @@ Plugin 'https://github.com/HerringtonDarkholme/yats.vim/'
 Plugin 'mhartington/oceanic-next'
 Plugin 'eslint/eslint'
 Plugin 'https://github.com/othree/javascript-libraries-syntax.vim'
+Plugin 'https://github.com/rakr/vim-two-firewatch'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -144,7 +195,7 @@ let g:used_javascript_libs = 'react, jasmine, vue, handlebars, jquery'
 
 " indentLine
 
-let g:indentLine_enabled = 0
+let g:indentLine_enabled = 1  
 let g:indentLine_setColors = 1
 let g:indentLine_char = '┆'
 let g:indentLine_leadingSpaceEnabled = 1
@@ -197,10 +248,6 @@ let g:sol = {
 			\}
 		\}
 
-
-
-
-
 function! DeviconsColors(config)
 			let colors = keys(a:config)
 			augroup devicons_colors
@@ -239,10 +286,6 @@ function! DeviconsColors(config)
 		\}
 		call DeviconsColors(g:devicons_colors)
 
-
-
-
-
 " FZF
 
 " This is the default extra key bindings
@@ -266,7 +309,7 @@ nnoremap <leader>m :Marks<CR>
 
 let g:fzf_tags_command = 'ctags -R'
 " Border color
-let g:fzf_layout = {'up':'~90%', 'window': { 'width': 0.8, 'height': 0.8,'yoffset':0.5,'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
+let g:fzf_layout = {'up':'~90%', 'window': { 'width': 0.8, 'height': 0.6,'yoffset':0.5,'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
 
 let $FZF_DEFAULT_OPTS = '--layout=reverse --info=inline'
 let $FZF_DEFAULT_COMMAND="rg --files --hidden"
@@ -291,7 +334,6 @@ let g:fzf_colors =
 "Get Files
 command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
-
 
 " Get text in files with Rg
 command! -bang -nargs=* Rg
