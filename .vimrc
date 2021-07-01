@@ -1,13 +1,21 @@
 set encoding=UTF-8
 set mouse=a
 syntax enable
+set nocompatible
 
-colorscheme dogrun
-let g:lightline = {
-  \ 'colorscheme': 'dogrun',
-  \ }
-let g:clap_theme = 'dogrun'
-highlight Comment cterm=italic
+" Remember line when reopen file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+endif
+
+" Center cursor verticaly
+augroup VCenterCursor
+  au!
+  au BufEnter,WinEnter,WinNew,VimResized *,*.*
+        \ let &scrolloff=winheight(win_getid())/3
+augroup END
+
+colorscheme gruvbox
 
 set termguicolors
 set tabstop=2
@@ -18,22 +26,29 @@ set nowrap
 
 " Mapping
 map <C-s> :w<CR>
-map <C-n> :NERDTreeToggle<CR>
+map <C-n> :CocCommand explorer<CR>
 map <C-c> :q<CR>
-map <C-x> :q!<CR>
+map <C-a> :q!<CR>
 map <C-\> :cd ~<CR>
 map <C-i> :tabnext<CR>
 map <C-u> :tabprevious<CR>
-map <C-f> :Clap<CR>
+map <C-f> :Clap files<CR>
+map <C-g> :Clap<CR>
 
 " tmux
 let g:tmux_navigator_no_mappings = 1
 
-nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
-nnoremap <silent> <C-/> :TmuxNavigatePrevious<cr>
+noremap <silent> <C-h> :TmuxNavigateLeft<cr>
+noremap <silent> <C-j> :TmuxNavigateDown<cr>
+noremap <silent> <C-k> :TmuxNavigateUp<cr>
+noremap <silent> <C-l> :TmuxNavigateRight<cr>
+noremap <silent> <C-/> :TmuxNavigatePrevious<cr>
+
+" Move lines
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+vnoremap <A-l> :m '>+1<CR>gv=gv
+vnoremap <A-h> :m '<-2<CR>gv=gv
 
 " Vim rooter
 " let g:rooter_targets = '*'
@@ -43,17 +58,18 @@ nnoremap <silent> <C-/> :TmuxNavigatePrevious<cr>
 nmap <silent> gd <Plug>(coc-definition)
 
 " coc-explorer
-:nnoremap <space>e :CocCommand explorer<CR>
+" :nnoremap <space>e :CocCommand explorer<CR>
 
 " prettier
 " command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " ariline
+let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
-" let g:airline_theme='tender'
+let g:airline_theme='base16_gruvbox_dark_hard'
 
 " Emmet
-let g:user_emmet_leader_key=','
+let g:user_emmet_leader_key='<space>'
 let g:javascript_plugin_jsdoc = 1
 
 " devicons
@@ -92,7 +108,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'wadackel/vim-dogrun'
 Plug 'liuchengxu/vim-clap'
 Plug 'mattn/emmet-vim'
-Plug 'christoomey/vim-tmux-navigator'
+Plug 'arcticicestudio/nord-vim' 
 
 call plug#end()
 
@@ -103,13 +119,14 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Yggdroot/indentLine'
 Plugin 'eslint/eslint'
+Plugin 'christoomey/vim-tmux-navigator'
 
-call vundle#end()            " required
-filetype plugin indent on    " required
+call vundle#end() 
+filetype plugin indent on 
 
 " indentLine
-let g:indentLine_enabled = 1  
+let g:indentLine_enabled = 1
 let g:indentLine_setColors = 1
 let g:indentLine_char = '┆'
-let g:indentLine_leadingSpaceEnabled = 0 
+let g:indentLine_leadingSpaceEnabled = 0
 let g:indentLine_leadingSpaceChar = '·'
